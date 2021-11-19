@@ -1,7 +1,26 @@
+#!/usr/bin/env groovy
+
 pipeline {
-    agent { docker { image 'python:3.5.1' } }
+    // agent { docker { image 'python:3.5.1' } }
+    agent {
+        label '!windows'
+    }
+
+    environment {
+        DISABLE_AUTH = 'true'
+        DB_ENGINE    = 'sqlite'
+    }
+
 
     stages {
+        stage('Echo') {
+            steps {
+                echo "Database engine is ${DB_ENGINE}"
+                echo "DISABLE_AUTH is ${DISABLE_AUTH}"
+                sh 'printenv'
+            }
+        }
+
         stage('Build1') {
             steps {
                 sh 'echo "Hello World"'
@@ -11,7 +30,7 @@ pipeline {
                 '''
             }
         }
-        stage('python build') {
+        stage('Python Build') {
             steps {
                 sh 'python --version'
             }
